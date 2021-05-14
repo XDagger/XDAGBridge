@@ -1,5 +1,9 @@
 /front-end/node_modules/
-/.idea/
 /front-end/package-lock.json
-.DS_Store
+/.idea/
+
 /services/bridge/node_modules/
+/services/bridge/build/
+.DS_Store
+
+.env

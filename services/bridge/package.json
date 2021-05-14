@@ -1,27 +1,19 @@
 {
   "private": true,
-
   "name": "dagbridge",
   "version": "1.0.0",
   "description": "",
   "main": "",
-
   "dependencies": {
-    "@openzeppelin/contracts": "^3.4.0",
+    "@openzeppelin/contracts": "^0.4.1",
     "@truffle/hdwallet-provider": "^1.0.34",
     "truffle-assertions": "^0.9.2",
     "truffle-plugin-verify": "^0.3.10",
     "dotenv": "^8.2.0"
   },
-
-  "directories": {
-    "test": "test"
-  },
-
   "workspaces": [
     "packages/*"
   ],
-
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
