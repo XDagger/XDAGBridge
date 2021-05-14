@@ -1,3 +1,4 @@
 /front-end/node_modules/
 /.idea/
 /front-end/package-lock.json
+.DS_Store
