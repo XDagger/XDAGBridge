@@ -2,8 +2,6 @@ import React, {useReducer, useContext} from 'react';
 import reducer from './reducer';
 import INIT_STATE from './initState';
 import allowTokensConnect from './allowTokensContract'
-import bridgeConnect from './bridgeContract'
-import federationConnect from './federationContract'
 
 const Web3 = require('web3');
 
@@ -45,8 +43,6 @@ const SubstrateContextProvider = (props) => {
     connect(state, dispatch);
     stateChange(state, dispatch)
     allowTokensConnect(state,dispatch)
-    bridgeConnect(state,dispatch)
-    federationConnect(state,dispatch)
 
     console.log("=====state=====",state);
 

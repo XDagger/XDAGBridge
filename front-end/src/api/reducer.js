@@ -30,30 +30,6 @@ const reducer = (state, action) => {
         case 'AllowTokens_ERROR':
             return { ...state, allowContract: null, allowState: 'ERROR' };
 
-
-        case 'LOAD_Bridge':
-            return { ...state, bridgeState: 'LOAD_Bridge' };
-
-        case 'SET_Bridge':
-            return { ...state, bridgeContract: action.payload, bridgeState: 'READY' };
-
-        case 'Bridge_ERROR':
-            return { ...state, bridgeContract: null, bridgeState: 'ERROR' };
-
-
-
-        case 'LOAD_Federation':
-            return { ...state, federationState: 'LOAD_Federation' };
-
-        case 'SET_Federation':
-            return { ...state, federationContract: action.payload, federationState: 'READY' };
-
-        case 'Federation_ERROR':
-            return { ...state, federationContract: null, federationState: 'ERROR' };
-
-
-
-
         default:
             throw new Error(`Unknown type: ${action.type}`);
     }

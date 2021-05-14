@@ -4,8 +4,8 @@ import useTypewriter from "react-typewriter-hook";
 
 const MagicOcean = [
     " convert tokens ",
-    " from XDAG ",
-    " to Ethereum",
+    " from Ethereum ",
+    " to XDAG",
 
 ];
 let index = 0;
