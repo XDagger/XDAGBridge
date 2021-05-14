@@ -2,3 +2,4 @@
 /.idea/
 /front-end/package-lock.json
 .DS_Store
+/services/bridge/node_modules/
