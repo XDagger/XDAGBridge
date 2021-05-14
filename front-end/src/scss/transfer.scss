@@ -95,3 +95,73 @@ display: flex;
   color: #8c8c8c;
   padding-bottom: 50px;
 }
+
+
+.modal{
+  width: 300px;
+  height: 200px;
+
+  z-index: 9999;
+  background: #fff;
+  top: 50%;
+  left: 50%;
+  margin:-150px 0 0 -100px ;
+  .modalheader {
+    padding: 30px 20px 5px ;
+    font-size: 16px;
+  }
+  .modalsection {
+    padding: 20px 0 0;
+  }
+  .modalClose {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    width: 30px;
+    height: 30px;
+    text-align: right;
+    color: #bbb;
+    font-size: 24px;
+    cursor: pointer
+  }
+  footer{
+    padding-top: 30px;
+    button {
+      width: 100%;
+      border-radius: 0;
+      padding: 10px 0;
+      text-transform: uppercase;
+    }
+  }
+}
+.modal2{
+  height: 120px;
+  .modalheader {
+    padding: 50px 20px;
+  }
+}
+
+button[disabled]{
+  background: #ddd!important;
+  border: 0;
+  &:focus, &:hover,&:hover::before,&::before{
+    background: #ddd!important;
+    border: 0;
+    color: #ffffff!important;
+    transform: none!important;
+
+  }
+}
+.nwchange{
+  button[disabled]{
+    color: #999999!important;
+    background: none!important;
+
+  }
+}
+.h1Icon{
+  font-size: 14px ;
+  vertical-align: middle;
+  padding: 0 20px;
+  cursor: pointer;
+}

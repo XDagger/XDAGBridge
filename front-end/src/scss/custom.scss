@@ -4,6 +4,7 @@
 @import "./index";
 @import "./transfer";
 @import "./button";
+@import "./description";
 
 
 *{
@@ -18,4 +19,9 @@ input{
   &:focus,&:hover{
    border-bottom: 1px solid #000!important;
   }
+}
+li,ul{
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
