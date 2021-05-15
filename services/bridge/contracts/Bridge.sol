@@ -12,7 +12,7 @@ import "./BridgeTokenFactory.sol";
 
 import "./Utils.sol";
 
-contract DAGBridge is IBridge, Ownable {
+contract Bridge is IBridge, Ownable {
     using SafeMath for uint256;
 
     address private constant NULL_ADDRESS = address(0);
@@ -47,6 +47,10 @@ contract DAGBridge is IBridge, Ownable {
         erc20XDAG = tokenFactory.createBridgeToken(newSymbol, newSymbol, 18);
         emit ERC20XDAGCreated(erc20XDAG, newSymbol, 18);
         return true;
+    }
+
+    function getPrefix() external view override returns (string memory) {
+        return symbolPrefix;
     }
 
     // Cross XDAG to ERC20

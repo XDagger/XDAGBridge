@@ -1,6 +1,6 @@
 const BridgeTokenFactory = artifacts.require("BridgeTokenFactory");
 const BridgeToken = artifacts.require("BridgeToken");
-const Bridge = artifacts.require("DAGBridge");
+const Bridge = artifacts.require("Bridge");
 
 const BN = web3.utils.BN;
 const UNIT = new BN('1000000000000000000');

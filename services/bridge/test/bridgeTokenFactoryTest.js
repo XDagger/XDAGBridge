@@ -3,7 +3,7 @@ const truffleAssert = require('truffle-assertions');
 const BridgeToken = artifacts.require('BridgeToken');
 const BridgeTokenFactory = artifacts.require('BridgeTokenFactory');
 
-const utils = require('./test/utils');
+const utils = require('./utils');
 
 const BN = web3.utils.BN;
 
