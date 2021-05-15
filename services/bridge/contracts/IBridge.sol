@@ -6,7 +6,7 @@ interface IBridge {
 
     function getFeePercentage() external view returns(uint);
 
-    function receiveTokens(uint256 amount, bytes calldata userData) external returns(bool);
+    function receiveTokens(uint256 amount, string memory to) external returns(bool);
 
     function acceptTransfer(
         address receiver,
@@ -18,7 +18,7 @@ interface IBridge {
 
     event ERC20XDAGCreated(address indexed _address, string _newSymbol, uint256 _decimals);
     
-    event CrossERC20XDAG(address indexed _from, uint256 _amount, bytes _userData);
+    event CrossERC20XDAG(address indexed _from, uint256 _amount, string _to);
     
     event AcceptedCrossTransfer(address indexed _tokenAddress, address indexed _to, uint256 _amount, uint8 _decimals);
     

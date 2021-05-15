@@ -38,6 +38,16 @@ module.exports = function (deployer, networkName, accounts) {
                 console.log("After acceptTransfer", `${mainAccount}'s balance is ${balance}`);
             }
 
+            await bridgeToken.approve(bridge.address, web3.utils.toWei("1000"));
+
+            await bridge.receiveTokens(web3.utils.toWei("1000"), "helloworld");
+
+            {
+                let num = await bridgeToken.balanceOf(mainAccount);
+                let balance = web3.utils.fromWei(num);
+                console.log("After receiveToken", `${mainAccount}'s balance is ${balance}`);
+            }
+
             // await deployer.deploy(BridgeToken, "eXDAG", "eXDAG", accounts[0], 18);
         } else {
             console.log("Mainnet ...");

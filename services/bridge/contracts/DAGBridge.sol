@@ -98,7 +98,7 @@ contract DAGBridge is IBridge, Ownable {
     }
 
     //Crosss ERC20 to XDAG
-    function receiveTokens(uint256 amount, bytes calldata userData)
+    function receiveTokens(uint256 amount, string memory to)
         external
         override
         returns (bool)
@@ -122,7 +122,7 @@ contract DAGBridge is IBridge, Ownable {
 
         BridgeToken(erc20XDAG).burn(address(this), burnAmount);
 
-        emit CrossERC20XDAG(sender, burnAmount, userData);
+        emit CrossERC20XDAG(sender, burnAmount, to);
         return true;
     }
 
