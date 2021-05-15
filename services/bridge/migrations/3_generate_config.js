@@ -9,9 +9,7 @@ module.exports = function (deployer, networkName, accounts) {
         if (networkName !== 'mainnet') {
             console.log(`It's ${networkName}`);
 
-            // const bridgeTokenFactory = await BridgeTokenFactory.deployed();
             const bridge = await Bridge.deployed();
-            console.log(bridge);
             const eXDAGAddress = await bridge.erc20XDAG.call();       
 
             let contracts = {
@@ -19,13 +17,13 @@ module.exports = function (deployer, networkName, accounts) {
                 bridge: bridge.address
             };
 
-            fs.writeFileSync(`./front-end/src/config/${networkName}/contracts.json`, JSON.stringify(contracts, null, 4));
+            fs.writeFileSync(`../../front-end/src/config/${networkName}/contracts.json`, JSON.stringify(contracts, null, 4));
 
             const eXDAGBuild = require('../build/contracts/BridgeToken.json');
-            fs.writeFileSync(`./front-end/src/config/${networkName}/BridgeToken.abi.json`, JSON.stringify(eXDAGBuild.abi, null, 4));
+            fs.writeFileSync(`../../front-end/src/config/${networkName}/BridgeToken.abi.json`, JSON.stringify(eXDAGBuild.abi, null, 4));
 
             const bridgeBuild = require('../build/contracts/Bridge.json');
-            fs.writeFileSync(`./front-end/src/config/${networkName}/Bridge.abi.json`, JSON.stringify(bridgeBuild.abi, null, 4));
+            fs.writeFileSync(`../../front-end/src/config/${networkName}/Bridge.abi.json`, JSON.stringify(bridgeBuild.abi, null, 4));
         } else {
             console.log("It's mainnet now!!");
         }
