@@ -8,7 +8,7 @@ import eXDAGABIMainnet from "./config/mainnet/BridgeToken.abi.json";
 import contractAddressesKovan from "./config/kovan/contracts.json";
 import contractAddressesMainnet from "./config/mainnet/contracts.json";
 
-const network = 'mainnet';
+const network = 'kovan';
 const constants = {
   mainnet: {
     etherscanBase: 'https://etherscan.io',
@@ -50,6 +50,8 @@ function loadeXDAGContract(web3) {
 export {
   network,
   etherscanBase,
+  bridgeAddress,
+  eXDAGAddress,
   loadBridgeContract,
   loadeXDAGContract
 };

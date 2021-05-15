@@ -1,10 +1,9 @@
-import React, {useState} from "react";
 import api from "../api";
 import {useSubstrate} from "../api/contracts";
 
 export default  function HeaderTop() {
     const {state,dispatch} = useSubstrate();
-    const {web3Api,allAccounts} = state;
+    const {allAccounts} = state;
 
     const connectWallet = async () => {
         await api.Account.accountlist().then(data => {

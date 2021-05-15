@@ -21,15 +21,6 @@ const reducer = (state, action) => {
             return { ...state, allAccounts: null, allaccountsState: 'ERROR' };
 
 
-        case 'LOAD_AllowTokens':
-            return { ...state, allowState: 'LOAD_AllowTokens' };
-
-        case 'SET_AllowTokens':
-            return { ...state, allowContract: action.payload, allowState: 'READY' };
-
-        case 'AllowTokens_ERROR':
-            return { ...state, allowContract: null, allowState: 'ERROR' };
-
         default:
             throw new Error(`Unknown type: ${action.type}`);
     }

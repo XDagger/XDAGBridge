@@ -3,10 +3,27 @@ import api from '../api'
 import {useSubstrate} from "../api/contracts";
 import Description from './description'
 
+import Web3 from "web3";
+import Web3Modal from "web3modal";
+import { network, etherscanBase, loadBridgeContract,bridgeAddress,loadeXDAGContract,eXDAGAddress } from '../Constants';
+
+
+const NETWORK = network;
+
+const providerOptions = {};
+const web3Modal = new Web3Modal({
+    network: NETWORK, // optional
+    cacheProvider: true, // optional
+    providerOptions // required
+});
+const web3 = new Web3(Web3.givenProvider);
+
+
+
 
 export default function ConvertToken(){
 
-    const {state,dispatch} = useSubstrate();
+    const {state} = useSubstrate();
 
     const [fromNK, setFromNK] = useState('XDAG');
     const [toNK, setToNK] = useState('ETH');
@@ -15,40 +32,85 @@ export default function ConvertToken(){
 
     const [open, setOpen] = useState(false);
     const [show, setShow] = useState(false);
+    const [provider, setProvider] = useState(null);
 
-    const {web3Api,federationContract,bridgeContract,allAccounts} = state;
+    const [status, setStatus] = useState('notconnected');// eslint-disable-line
+
+    const [otherError, setOtherError] = useState('');
+
+    const [bridge, setBridge] = useState(null);
+    const [sentTxError, setSentTxError] = useState('');
+    const [allowance, setallowance] = useState(0);
+
+    const {allAccounts} = state;
 
     useEffect(()=>{
-        // if(!api.indexApi) return;
 
         api.indexApi.balance(address).then(result=>{
             console.log(result)
         })
 
-        dispatch({type: 'LOAD_AllowTokens'});
     },[])
     useEffect(()=>{
-        if(web3Api== null || !allAccounts) return;
+        // if(web3Api== null || !allAccounts) return;
+        //
+        // const getBalance = async()=>{
+        //     let ethBalance =await web3Api.eth.getBalance(allAccounts)
+        //     console.log(ethBalance)
+        //
+        // }
+        // getBalance()
 
-        const getBalance = async()=>{
-            let ethBalance =await web3Api.eth.getBalance(allAccounts)
-            console.log(ethBalance)
+    },[allAccounts])
 
+    const getAllowance = async (token) => {
+        const allowance = await token.methods.allowance(allAccounts, bridgeAddress).call();
+
+        console.log("My allowance: ", web3.utils.fromWei(allowance));
+        setallowance(web3.utils.fromWei(allowance))
+    }
+
+    async function connectWeb3() {
+        setStatus('notconnected');
+        const provider = await web3Modal.connect();
+        const mnemonic = "grace flock large very garbage cruise salad street wrap loan tide volume";
+        if (provider) {
+            if (provider.on) {
+                provider.on("accountsChanged", (acc) => {
+                    console.log(acc);
+                    // setAccounts(acc);
+                });
+                provider.on("chainChanged", (chainId) => {
+                    console.log(chainId);
+                    window.location.reload()
+                });
+                provider.on("connect", (info) => { // : { chainId: number }
+                    console.log(info);
+                });
+                provider.on("disconnect", (error) => {  // : { code: number; message: string }
+                    console.log(error);
+                });
+            }
+
+
+            setProvider(provider);
+            const web3Instance = new Web3(provider);
+            const contract = loadBridgeContract(web3Instance);
+            setBridge(contract)
+
+            try {
+                setStatus('ready');
+            } catch (err) {
+                setStatus('error');
+                setOtherError(`Error: ${err.message}. Please refresh or try with another network connection.`);
+                throw err;
+            }
         }
-        getBalance()
+    }
+    useEffect(() => {
+        connectWeb3();
+    }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
-        // let data =federationContract.methods.getMembers().call();
-        // console.log(data)
-
-    },[web3Api,allAccounts])
-    // useEffect(()=>{
-    //     if(bridgeContract== null ) return;
-    //
-    //     console.log("=====--===",bridgeContract.methods.calcMaxWithdraw)
-    //     let data = bridgeContract.methods.calcMaxWithdraw().call();
-    //     console.log("=====--===",data)
-    //
-    // },[bridgeContract])
 
     const changeToken = () => {
 
@@ -65,13 +127,39 @@ export default function ConvertToken(){
     const handleAmount = (e) =>{
         setAmount(e.target.value)
     }
-    const handleSubmit = () =>{
+    const handleSubmit = async () =>{
+        const web3Instance = new Web3(provider);
+        const XDAGcontract = loadeXDAGContract(web3Instance);
+        getAllowance(XDAGcontract)
 
-        let obj={
-            address,
-            amount
+        if (allowance < amount) {
+                const totalSupply = await XDAGcontract.methods.totalSupply().call();
+
+                await XDAGcontract.methods.approve(bridgeAddress, web3.utils.toWei(amount.toString())).send({ from: allAccounts }).then(data => {
+                    console.log('transactionHash', data);
+                    // settips('transactionHash')
+                    // settransactionHash(data.transactionHash)
+                }).catch(err => {
+                    setshowLoading(false)
+                });
+
+        } else {
+            console.log('Already have enough allowance!');
         }
-        console.log(obj)
+
+        try {
+            const tokens = await bridge.methods
+                .receiveTokens(web3.utils.toWei(amount.toString()),address)
+                .send({from: allAccounts});
+            console.log(tokens)
+
+        } catch (err) {
+            console.error(err.message)
+            setSentTxError(err.message);
+        }
+
+
+
         setShow(false)
     }
     const handleConfirm = () =>{
