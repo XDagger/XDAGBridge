@@ -1,36 +1,46 @@
 const truffleAssert = require('truffle-assertions');
 
 const BridgeToken = artifacts.require('BridgeToken');
-const BN = web3.utils.BN;
 
-const UNIT = new BN('1000000000000000000');
-const SUPPLY = UNIT.mul(new BN('1000000000'));
+const SUPPLY = '1000000000';
+const AMOUNT = '1000';
 
 contract('Bridge Token', accounts => {
   let token;
 
   before(async () => {
-    token = await BridgeToken.deployed();
-    await token.mint(accounts[0], SUPPLY);
   })
 
   it('should put 1B Bridge Token in the first account', async () => {
+    token = await BridgeToken.new("eXDAG", "eXDAG", accounts[0], 18);
+    await token.mint(accounts[0], web3.utils.toWei(SUPPLY));
     const balance = await token.balanceOf(accounts[0]);
-    assert(balance.eq(SUPPLY), '1B wasn\'t in the first account');
+    assert.equal(web3.utils.fromWei(balance), SUPPLY);
   });
 
-  it('should send 1 Bridge Token to accounts[1]', async () => {
-    await token.transfer(accounts[1], UNIT);
+  it('should send 1000 Bridge Token to accounts[1]', async () => {
+    token = await BridgeToken.new("eXDAG", "eXDAG", accounts[0], 18);
+    await token.mint(accounts[0], web3.utils.toWei(SUPPLY));
+    await token.transfer(accounts[1], web3.utils.toWei(AMOUNT));
     const balance = await token.balanceOf(accounts[0]);
-    assert(balance.eq(SUPPLY.sub(UNIT)), 'Bad balance');
+    const xxx = web3.utils.toWei(SUPPLY) - (web3.utils.toWei(AMOUNT));
+    assert.equal(balance, xxx);
   });
 
-  it('should allow 3rd party to transfer from the owner with allowance', async () => {
-    await token.transfer(accounts[1], UNIT.muln(100));
-    await token.approve(accounts[2], UNIT);
-    const balanceBefore = await token.balanceOf(accounts[0]);
-    await token.transferFrom(accounts[0], accounts[1], UNIT, {from: accounts[2]});
-    const balanceAfter = await token.balanceOf(accounts[0]);
-    assert(balanceBefore.sub(UNIT).eq(balanceAfter), 'Balance should change');
+  it('should send 1000 Bridge Token to accounts[1]', async () => {
+    token = await BridgeToken.new("eXDAG", "eXDAG", accounts[0], 18);
+    await token.mint(accounts[0], web3.utils.toWei(SUPPLY));
+    await token.transfer(accounts[1], web3.utils.toWei(AMOUNT));
+    const balance = await token.balanceOf(accounts[1]);
+    assert.equal(web3.utils.fromWei(balance), AMOUNT);
+  });
+
+  it('should let accounts[2] to transfer 1000 Bridge Token', async () => {
+    token = await BridgeToken.new("eXDAG", "eXDAG", accounts[0], 18);
+    await token.mint(accounts[0], web3.utils.toWei(SUPPLY));
+    await token.approve(accounts[2], web3.utils.toWei(AMOUNT));
+    await token.transferFrom(accounts[0], accounts[1], web3.utils.toWei(AMOUNT), {from: accounts[2]});
+    const balance = await token.balanceOf(accounts[1]);
+    assert.equal(web3.utils.fromWei(balance), AMOUNT);
   });
 });
