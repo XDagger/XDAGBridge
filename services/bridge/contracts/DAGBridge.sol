@@ -27,7 +27,9 @@ contract DAGBridge is IBridge, Ownable {
     IBridgeTokenFactory public tokenFactory;
     BridgeToken public erc20XDAG;
 
-    constructor(address _factory, string memory _symbolPrefix) Ownable() {
+    constructor() {}
+
+    function init(address _factory, string memory _symbolPrefix) public {
         require(
             _factory != NULL_ADDRESS,
             "Bridge: BridgeTokenFactory is empty"

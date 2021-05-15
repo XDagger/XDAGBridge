@@ -20,7 +20,7 @@ interface IBridgeTokenFactory {
 }
 
 contract BridgeTokenFactory is IBridgeTokenFactory, Ownable {
-    constructor() Ownable() {}
+    constructor() {}
 
     function createBridgeToken(
         string calldata name,
