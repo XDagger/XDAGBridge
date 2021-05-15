@@ -8,7 +8,7 @@ const keys = {
   main: process.env.MAIN_KEY,
 }
 
-// console.log(keys);
+console.log(keys);
 
 module.exports = {
   /**
@@ -58,7 +58,7 @@ module.exports = {
     },
 
     kovan: {
-      provider: () => new HDWalletProvider(mnemonic, `https://kovan.infura.io/v3/${keys.api}`),
+      provider: () => new HDWalletProvider(keys.kovan, `https://kovan.infura.io/v3/${keys.api}`),
       network_id: 42,       // Kovan's id
       gas: 5500000,        // Kovan has a lower block limit than mainnet
       confirmations: 2,    // # of confs to wait between deployments. (default: 0)
