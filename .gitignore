@@ -1,5 +1,6 @@
 /front-end/node_modules/
 /front-end/package-lock.json
+/front-end/yarn.lock
 /.idea/
 
 services/bridge/node_modules/
