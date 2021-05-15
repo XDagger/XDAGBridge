@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "./IBridge.sol";
+import "./BridgeToken.sol";
 import "./BridgeTokenFactory.sol";
 
 import "./Utils.sol";
@@ -25,7 +26,7 @@ contract DAGBridge is IBridge, Ownable {
     mapping(bytes32 => bool) public processed; // ProcessedHash => true
 
     IBridgeTokenFactory public tokenFactory;
-    BridgeToken public erc20XDAG;
+    address public erc20XDAG;
 
     constructor() {}
 
@@ -43,10 +44,8 @@ contract DAGBridge is IBridge, Ownable {
     function _createERC20XDAG() internal returns (bool) {
         string memory newSymbol =
             string(abi.encodePacked(symbolPrefix, "XDAG"));
-        address bridgeTokenAddress =
-            tokenFactory.createBridgeToken(newSymbol, newSymbol, 18);
-        erc20XDAG = BridgeToken(bridgeTokenAddress);
-        emit ERC20XDAGCreated(bridgeTokenAddress, newSymbol, 18);
+        erc20XDAG = tokenFactory.createBridgeToken(newSymbol, newSymbol, 18);
+        emit ERC20XDAGCreated(erc20XDAG, newSymbol, 18);
         return true;
     }
 
@@ -74,7 +73,7 @@ contract DAGBridge is IBridge, Ownable {
         require(!processed[compiledId], "Bridge: Already processed");
 
         processed[compiledId] = true;
-        erc20XDAG.mint(receiver, amount); //fixme: need fix issue of decimals
+        BridgeToken(erc20XDAG).mint(receiver, amount); //fixme: need fix issue of decimals
 
         return true;
     }
@@ -105,13 +104,17 @@ contract DAGBridge is IBridge, Ownable {
         returns (bool)
     {
         address sender = _msgSender();
-        IERC20(erc20XDAG).transferFrom(_msgSender(), address(this), amount);
+        BridgeToken(erc20XDAG).transferFrom(
+            _msgSender(),
+            address(this),
+            amount
+        );
 
         // todo: handle fee
         // uint256 fee = 0;
         // if(feePercentage > 0) {
         //     fee = amount.mul(feePercentage).div(feePercentageDivider);
-        //     IERC20(erc20XDAG).transfer(owner(), fee);
+        //     BridgeToken(erc20XDAG).transfer(owner(), fee);
         // }
         // uint256 burnAmount = amount - fee;
 

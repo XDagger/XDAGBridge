@@ -26,7 +26,7 @@ contract BridgeTokenFactory is IBridgeTokenFactory, Ownable {
         string calldata name,
         string calldata symbol,
         uint8 decimals
-    ) external override onlyOwner returns (address) {
+    ) external override /*onlyOwner*/ returns (address) {
         address bridgeToken =
             address(new BridgeToken(name, symbol, owner(), decimals));
         emit BridgeTokenCreated(bridgeToken, symbol, decimals);
