@@ -145,7 +145,7 @@ module.exports = class Accountant {
             }
 
             // save progress for next query
-            this._saveProgress(this.lastBlockPath, toBlock);
+            this._saveProgress(this.lastBlockPath, ''+toBlock);
 
             return true;
         } catch (err) {
@@ -168,17 +168,20 @@ module.exports = class Accountant {
 
         console.log(result.body);
         
-        var resp = JSON.parse(result.body);
-        if(resp.result && resp.result.length > 0) {
-            // { result: [ { block: 'wKmuzIZNNIIQXbfXsj40FjepPfox+R1q' } ], id: 1 }
-            var block = resp.result.block;
-            var url = `https://explorer.xdag.io/block/${block}`;
-            console.log(`Xfer transaction: ${url}`);
+        if(result.body) {
+            var resp = JSON.parse(result.body);
+            if(resp.result && resp.result.length > 0) {
+                // { result: [ { block: 'wKmuzIZNNIIQXbfXsj40FjepPfox+R1q' } ], id: 1 }
+                var block = resp.result.block;
+                var url = `https://explorer.xdag.io/block/${block}`;
+                console.log(`Xfer transaction: ${url}`);
+            }
         }
     }
 
     _saveProgress(path, value) {
         if (value) {
+            console.log(value);
             fs.writeFileSync(path, value);
         }
     }
