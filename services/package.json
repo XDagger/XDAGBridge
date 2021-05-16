@@ -1,0 +1,29 @@
+{
+  "name": "xdagbridge",
+  "private": "true",
+  "version": "1.1.0",
+  "description": "XDAG-ETH Bridge",
+  "keywords": [
+    "bridge",
+    "ethereum",
+    "xdag"
+  ],
+  "author": "Noname",
+  "scripts": {
+    "start": "rm db/lastBlock.txt; rm db/side-fed/lastBlock.txt; node src/main.js",
+    "integrationTest": "rm -rf ./db/* && node ./integrationTest/integrationTest.js",
+    "clean": "rm -rf ./db/*"
+  },
+  "dependencies": {
+    "dotenv": "^9.0.2",
+    "ethereumjs-tx": "^1.3.7",
+    "ethereumjs-util": "^6.1.0",
+    "lodash": "^4.17.20",
+    "log4js": "^5.0.0",
+    "request": "^2.88.2",
+    "web3": "^1.2.11"
+  },
+  "devDependencies": {
+    "web3-core-promievent": "^1.2.11"
+  }
+}
