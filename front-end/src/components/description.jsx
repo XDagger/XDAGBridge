@@ -29,7 +29,7 @@ export default function Description(){
             </div>
         }
         <div>Transfer your XDAG to ( <span className='addressBrdr' onClick={clipboard}>JR9X4kDNg6d8gpIMQGe6y1SwZkAPwUq9</span> ) on XDAG wallet with remark as your Ethereum wallet address.</div>
-        <div className='codeBrdr'>`xfer [Amount] JR9X4kDNg6d8gpIMQGe6y1SwZkAPwUq9 [Your Ethereum wallet] `</div>
+        <div className='codeBrdr'>xfer [Amount] JR9X4kDNg6d8gpIMQGe6y1SwZkAPwUq9 [Your Ethereum wallet]</div>
         <ul>
             <li><a href="https://github.com/XDagger/xdag/wiki/Get-a-wallet" target="_blank">How to get a wallet</a></li>
             <li><a href="https://github.com/XDagger/xdag/wiki/Getting-started" target="_blank">How to getting started</a></li>
