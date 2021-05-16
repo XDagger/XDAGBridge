@@ -2,6 +2,8 @@ import React, { useState,useEffect } from 'react';
 import api from '../api'
 import {useSubstrate} from "../api/contracts";
 import Description from './description'
+import Loading from './loading'
+import Success from "./success";
 
 import Web3 from "web3";
 import Web3Modal from "web3modal";
@@ -26,51 +28,69 @@ export default function ConvertToken(){
     const {state} = useSubstrate();
 
     const [fromNK, setFromNK] = useState('XDAG');
-    const [toNK, setToNK] = useState('ETH');
-    const [address, setAddress] = useState('X4q7Rm1z0JiNpyVq+Vq2EuyivA2zuRDy');
-    const [amount, setAmount] = useState('20');
+    const [toNK, setToNK] = useState('eXDAG');
+    const [address, setAddress] = useState('');
+    const [amount, setAmount] = useState('');
 
     const [open, setOpen] = useState(false);
     const [show, setShow] = useState(false);
     const [provider, setProvider] = useState(null);
+    const [transactionHash, setTransactionHash] = useState('');
+    const [TokensTx, setTokensTx] = useState(false);
 
     const [status, setStatus] = useState('notconnected');// eslint-disable-line
 
     const [otherError, setOtherError] = useState('');
-
+    const [showLoading, setshowLoading] = useState(false);
+    const [showSuccess, setshowSuccess] = useState(false);
+    const [tips,setTips]= useState('');
     const [bridge, setBridge] = useState(null);
     const [sentTxError, setSentTxError] = useState('');
     const [allowance, setallowance] = useState(0);
+    const [exdagBalance, setExdagBalance] = useState(0);
+    const [XDAGcontract, setXDAGcontract] = useState(null);
+    const [XDAG, setXDAG] = useState(0);
 
     const {allAccounts} = state;
 
     useEffect(()=>{
 
-        api.indexApi.balance(address).then(result=>{
-            console.log(result)
-        })
+        let t = setInterval(()=>{
+            api.indexApi.balance(address).then(result=>{
+                if(!XDAG || (XDAG && XDAG !== result.balance)){
+                    clearInterval(t)
+                    setXDAG(result.balance)
 
-    },[])
+                }
+
+            })
+        },3000)
+
+
+
+    },[TokensTx])
+
     useEffect(()=>{
-        // if(web3Api== null || !allAccounts) return;
-        //
-        // const getBalance = async()=>{
-        //     let ethBalance =await web3Api.eth.getBalance(allAccounts)
-        //     console.log(ethBalance)
-        //
-        // }
-        // getBalance()
+        if(allAccounts == null || XDAGcontract == null ) return;
 
-    },[allAccounts])
+       const getBalance = async () =>{
+           const exdagbalance = await XDAGcontract.methods.balanceOf(allAccounts).call();
+
+           setExdagBalance(web3.utils.fromWei(exdagbalance))
+       }
+        getBalance();
+
+    },[XDAGcontract,allAccounts,TokensTx])
 
     const getAllowance = async (token) => {
         const allowance = await token.methods.allowance(allAccounts, bridgeAddress).call();
-
         console.log("My allowance: ", web3.utils.fromWei(allowance));
         setallowance(web3.utils.fromWei(allowance))
     }
-
-    async function connectWeb3() {
+    const etherscanTxLink =  (tx) => {
+        return `${etherscanBase}/tx/${tx}`;
+    }
+    const connectWeb3 = async() => {
         setStatus('notconnected');
         const provider = await web3Modal.connect();
         const mnemonic = "grace flock large very garbage cruise salad street wrap loan tide volume";
@@ -78,7 +98,6 @@ export default function ConvertToken(){
             if (provider.on) {
                 provider.on("accountsChanged", (acc) => {
                     console.log(acc);
-                    // setAccounts(acc);
                 });
                 provider.on("chainChanged", (chainId) => {
                     console.log(chainId);
@@ -94,9 +113,8 @@ export default function ConvertToken(){
 
 
             setProvider(provider);
-            const web3Instance = new Web3(provider);
-            const contract = loadBridgeContract(web3Instance);
-            setBridge(contract)
+
+
 
             try {
                 setStatus('ready');
@@ -109,7 +127,17 @@ export default function ConvertToken(){
     }
     useEffect(() => {
         connectWeb3();
+
     }, [])// eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        if(provider == null) return;
+        const web3Instance = new Web3(provider);
+        const contract = loadBridgeContract(web3Instance);
+        setBridge(contract)
+        const XDAGcontract = loadeXDAGContract(web3Instance);
+        setXDAGcontract(XDAGcontract)
+    }, [provider])
 
 
     const changeToken = () => {
@@ -128,17 +156,23 @@ export default function ConvertToken(){
         setAmount(e.target.value)
     }
     const handleSubmit = async () =>{
-        const web3Instance = new Web3(provider);
-        const XDAGcontract = loadeXDAGContract(web3Instance);
-        getAllowance(XDAGcontract)
+        setShow(false)
+        setshowLoading(true);
+        setTokensTx(false)
+        setXDAG(0)
+
+        setTips('Get Allowance');
+
+        getAllowance(XDAGcontract);
 
         if (allowance < amount) {
                 const totalSupply = await XDAGcontract.methods.totalSupply().call();
 
+
+                setTips('Get total Supply');
                 await XDAGcontract.methods.approve(bridgeAddress, web3.utils.toWei(amount.toString())).send({ from: allAccounts }).then(data => {
-                    console.log('transactionHash', data);
-                    // settips('transactionHash')
-                    // settransactionHash(data.transactionHash)
+                    setTips('approve');
+                    setTransactionHash(data.transactionHash)
                 }).catch(err => {
                     setshowLoading(false)
                 });
@@ -148,10 +182,19 @@ export default function ConvertToken(){
         }
 
         try {
+            setTips('Transfer token');
             const tokens = await bridge.methods
                 .receiveTokens(web3.utils.toWei(amount.toString()),address)
                 .send({from: allAccounts});
-            console.log(tokens)
+            if(tokens.transactionHash){
+                setTokensTx(true)
+                setshowLoading(false)
+                setshowSuccess(true)
+                setTimeout(()=>{
+                    setshowSuccess(false)
+                },2000)
+            }
+
 
         } catch (err) {
             console.error(err.message)
@@ -159,8 +202,6 @@ export default function ConvertToken(){
         }
 
 
-
-        setShow(false)
     }
     const handleConfirm = () =>{
         if(!allAccounts){
@@ -170,14 +211,24 @@ export default function ConvertToken(){
         }
 
     }
+
     return(
         <div className="work section second">
-            <div className="container">
-                <h1>
-                    {fromNK}
-                    <i className='icon fa-exchange h1Icon' onClick={changeToken}/>
-                    {toNK}
-                </h1>
+            <Loading showLoading={showLoading} tips={tips}/>
+            <Success  showLoading={showSuccess}/>
+            <div className="container top">
+                <div>
+                    <h1>
+                        <span className='title'>{fromNK}</span>
+                        <i className='icon fa-exchange h1Icon' onClick={changeToken}/>
+                        <span className='title'>{toNK}</span>
+                    </h1>
+                    {
+                        !!exdagBalance && <span className='balance'>eXDAG balance: {exdagBalance} eXDAG</span>
+                    }
+
+                </div>
+
                 {
                     toNK === 'XDAG' && <div >
                         <div className="transfer">
@@ -195,8 +246,12 @@ export default function ConvertToken(){
                             </div>
                         </div>
                         <div className='tips'>
-                            <div>Service fee: 0</div>
-                            <div> Total cost: <span>0</span></div>
+                            <div>Service fee: 1%</div>
+                            <div> Total cost: <span>{amount * 0.01}</span></div>
+                            {
+                                TokensTx &&      <div className='xdag'> XDAG balance: <span>{XDAG}</span></div>
+                            }
+
                         </div>
                         {
                             show && <div>
@@ -245,10 +300,16 @@ export default function ConvertToken(){
                         <div className='transferTips'>
                             Your wallet will open and you will be asked to <br/>confirm the first of two transactions required for the bridge.
                         </div>
+                        {
+                            transactionHash &&  <div>
+                                TX: <a href={etherscanTxLink(transactionHash)} target='_blank'>{transactionHash}</a>
+                            </div>
+                        }
+
                     </div>
                 }
                 {
-                    toNK === 'ETH' && <Description />
+                    toNK === 'eXDAG' && <Description />
                 }
 
             </div>

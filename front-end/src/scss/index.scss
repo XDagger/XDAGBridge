@@ -113,9 +113,27 @@ a:hover {
 }
 
 .section .container h1 {
-  text-transform: uppercase;
+  //text-transform: uppercase;
   margin-bottom: 30px;
-  position: relative
+  position: relative;
+  .title{
+    //font-family: "Lato", Arial, sans-serif
+    font-family:  serif;
+    font-weight: bolder;
+  }
+}
+.top{
+  h1{
+    display: inline-block;
+  }
+  .balance{
+    padding-left: 30px;
+    margin-bottom: 10px;
+    display: inline-block;
+    vertical-align: top;
+    line-height: 3em;
+    color: #999999;
+  }
 }
 
 .intro {
@@ -228,3 +246,8 @@ footer .social li a {
   height: 80px;
 }
 
+.xdag{
+  color: #000000;
+  font-size: 16px;
+  padding-top: 20px ;
+}

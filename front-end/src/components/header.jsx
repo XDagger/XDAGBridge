@@ -5,7 +5,7 @@ export default function Header() {
     return(
         <div className="intro section">
             <div className="container">
-                <p>XDAG bridges with Ethereum</p>
+                <p>XDAG bridge with Ethereum</p>
                 <div className="units-row units-split wrap ">
                     <div className="unit-20 topLeft">
                         <img src={logo} alt="" />

@@ -1,0 +1,202 @@
+
+.animate-container {
+  width:100px;
+  height:100px;
+  border:5px solid #000;
+  border-radius:50%;
+  margin:50px auto 20px;
+  position:relative;
+}
+.animate-container .sa-line {
+  height:5px;
+  background-color:#000;
+  display:block;
+  border-radius:2px;
+  position:absolute;
+  z-index:101;
+}
+.animate-container .sa-tip {
+  width:25px;
+  left:18px;
+  top:47px;
+  -webkit-transform:rotate(45deg);
+  transform:rotate(45deg);
+  animation:animationSuccessTip 0.75s;
+  -webkit-animation:animationSuccessTip 0.75s;
+}
+.animate-container .sa-long {
+  width:47px;
+  right:12px;
+  top:40px;
+  -webkit-transform:rotate(-45deg);
+  transform:rotate(-45deg);
+  animation:animationSuccessLong 0.75s;
+  -webkit-animation:animationSuccessLong 0.75s;
+}
+.animate-container .animate-before {
+  position:absolute;
+  overflow:hidden;
+  z-index:100;
+  left:-10px;
+  top:10px;
+  width:60px;
+  height:120px;
+  background:rgba(255,255,255,1);
+  -webkit-transform:rotate(-45deg);
+  -moz-transform:rotate(-45deg);
+  -ms-transform:rotate(-45deg);
+  -o-transform:rotate(-45deg);
+  transform:rotate(-45deg);
+}
+.animate-container .animate-before .circle {
+  position:absolute;
+  left:16px;
+  top:10px;
+  width:100px;
+  height:100px;
+  border:5px solid #000;
+  border-radius:50%;
+}
+.animate-container:after {
+  content:'';
+  position:absolute;
+  z-index:99;
+  left:41px;
+  top:-11px;
+  width:60px;
+  height:120px;
+  background:rgba(255,255,255,0.5);
+  -webkit-transform:rotate(-45deg);
+  -moz-transform:rotate(-45deg);
+  -ms-transform:rotate(-45deg);
+  -o-transform:rotate(-45deg);
+  transform:rotate(-45deg);
+  transform-origin:0px 60px;
+  animation:rotateSelf 0.75s;
+  -webkit-animation:rotateSelf 0.75s;
+}
+@keyframes rotateSelf {
+  from {
+    -webkit-transform:rotate(-45deg);
+    -moz-transform:rotate(-45deg);
+    -ms-transform:rotate(-45deg);
+    -o-transform:rotate(-45deg);
+    transform:rotate(-45deg);
+  }
+  to {
+    -webkit-transform:rotate(-405deg);
+    -moz-transform:rotate(-405deg);
+    -ms-transform:rotate(-405deg);
+    -o-transform:rotate(-405deg);
+    transform:rotate(-405deg);
+  }
+}@-webkit-keyframes rotateSelf /*Safari and Chrome*/ {
+   from {
+     -webkit-transform:rotate(-45deg);
+     -moz-transform:rotate(-45deg);
+     -ms-transform:rotate(-45deg);
+     -o-transform:rotate(-45deg);
+     transform:rotate(-45deg);
+   }
+   to {
+     -webkit-transform:rotate(-405deg);
+     -moz-transform:rotate(-405deg);
+     -ms-transform:rotate(-405deg);
+     -o-transform:rotate(-405deg);
+     transform:rotate(-405deg);
+   }
+ }@keyframes animationSuccessLong {
+    0% {
+      width:0;
+      right:30px;
+      top:40px;
+    }
+    65% {
+      width:0;
+      right:45px;
+      top:42px;
+    }
+    84% {
+      width:55px;
+      right:0px;
+      top:37px;
+    }
+    100% {
+      width:47px;
+      right:12px;
+      top:40px;
+    }
+  }@-webkit-keyframes animationSuccessLong {
+     0% {
+       width:0;
+       right:46px;
+       top:56px;
+     }
+     65% {
+       width:0;
+       right:53px;
+       top:56px;
+     }
+     84% {
+       width:55px;
+       right:0px;
+       top:37px;
+     }
+     100% {
+       width:47px;
+       right:12px;
+       top:40px;
+     }
+   }@keyframes  animationSuccessTip {
+      0% {
+        width:0;
+        left:8px;
+        top:8px;
+      }
+      54% {
+        width:0;
+        left:8px;
+        top:8px;
+      }
+      70% {
+        width:50px;
+        left:3px;
+        top:30px;
+      }
+      84% {
+        width:17px;
+        left:30px;
+        top:47px;
+      }
+      100% {
+        width:25px;
+        left:18px;
+        top:47px;
+      }
+    }@-webkit-keyframes animationSuccessTip {
+       0% {
+         width:0;
+         left:1px;
+         top:21px;
+       }
+       54% {
+         width:0;
+         left:1px;
+         top:21px;
+       }
+       70% {
+         width:50px;
+         left:-2px;
+         top:38px;
+       }
+       84% {
+         width:17px;
+         left:30px;
+         top:47px;
+       }
+       100% {
+         width:25px;
+         left:18px;
+         top:47px;
+       }
+     }
