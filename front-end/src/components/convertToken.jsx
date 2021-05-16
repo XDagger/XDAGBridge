@@ -21,8 +21,6 @@ const web3Modal = new Web3Modal({
 const web3 = new Web3(Web3.givenProvider);
 
 
-
-
 export default function ConvertToken(){
 
     const {state} = useSubstrate();
@@ -54,10 +52,11 @@ export default function ConvertToken(){
     const {allAccounts} = state;
 
     useEffect(()=>{
+        if(!TokensTx)return
 
         let t = setInterval(()=>{
             api.indexApi.balance(address).then(result=>{
-                if(!XDAG || (XDAG && XDAG !== result.balance)){
+                if(!XDAG  || (XDAG && XDAG !== result.balance)){
                     clearInterval(t)
                     setXDAG(result.balance)
 
