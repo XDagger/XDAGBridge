@@ -160,15 +160,12 @@ export default function ConvertToken(){
         setTokensTx(false)
         setXDAG(0)
 
-        setTips('Get Allowance');
+        setTips('Fetch allowance in progress...');
 
         getAllowance(XDAGcontract);
 
         if (allowance < amount) {
-                const totalSupply = await XDAGcontract.methods.totalSupply().call();
-
-
-                setTips('Get total Supply');
+                setTips('Approve in progress...');
                 await XDAGcontract.methods.approve(bridgeAddress, web3.utils.toWei(amount.toString())).send({ from: allAccounts }).then(data => {
                     setTips('approve');
                     setTransactionHash(data.transactionHash)
@@ -181,7 +178,7 @@ export default function ConvertToken(){
         }
 
         try {
-            setTips('Transfer token');
+            setTips('Convert eXDAG to XDAG in progress...');
             const tokens = await bridge.methods
                 .receiveTokens(web3.utils.toWei(amount.toString()),address)
                 .send({from: allAccounts});
